@@ -10,7 +10,7 @@ function node:initialize(parent,limit,rot)
 	self.width=1
 	self.lenthSpeed = 0.2 + love.math.random()*0.2
 	self.rot=rot and rot*Pi/4*love.math.random() or 0
-	self.lenthLimit=limit or 10+40*love.math.random()
+	self.lenthLimit=limit or 30+20*love.math.random()
 	if not self.parent then return end
 	self.angle=self.parent.angle+self.rot-self.parent.angle/5
 end
@@ -38,7 +38,7 @@ function node:levelUp()
 	local this=self
 	while this.parent do
 		if this.parent.level<=this.level then
-			this.parent.level=this.parent.level+0.5	
+			this.parent.level=this.parent.level+1
 		end
 		this=this.parent
 	end
@@ -69,8 +69,8 @@ function node:grow()
 	
 
 	self.lenth=self.lenth+self.lenthSpeed
-	if self.lenth>self.lenthLimit+self.level*3 then
-		self.lenth=self.lenthLimit+self.level*3
+	if self.lenth>self.lenthLimit+self.level then
+		self.lenth=self.lenthLimit+self.level
 	end
 
 	self.width=self.width+WidthSpeed
@@ -78,7 +78,7 @@ function node:grow()
 		self.width=self.level
 	end
 
-	if self.width==self.level and self.lenth==self.lenthLimit+self.level*3 and not self.grown then
+	if self.width==self.level and self.lenth==self.lenthLimit+self.level and not self.grown then
 		self.grown=true
 		self:branch()
 	end

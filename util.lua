@@ -605,3 +605,42 @@ function string.sub_utf8(s, n)
 	end    
 	return string.sub(s, 1, n)    
 end  
+
+local _SetStencil=love.graphics.setStencil
+function love.graphics.setStencil(func)
+	if  _SetStencil then 
+		_SetStencil(func)
+	else
+		if func then
+			love.graphics.stencil(func)
+			love.graphics.setStencilTest("greater", 0)
+		else
+			love.graphics.setStencilTest()
+		end
+	end
+end
+
+local _ellipse=love.graphics.ellipse
+local function createEllipse(rx,ry,segments)
+	segments = segments or 30
+	local vertices = {}
+	for i=0, segments do
+		local angle = (i / segments) * math.pi * 2
+		local x = math.cos(angle)*rx
+		local y = math.sin(angle)*ry
+		table.insert(vertices, x)
+		table.insert(vertices, y)
+	end
+ 	
+	return vertices
+end
+
+function love.graphics.ellipse( mode, x, y, rx,ry,segments ,rot )
+	if not rot then 
+		_ellipse( mode, x, y, rx, ry)
+	else
+		local vert=createEllipse(rx,ry,segments)
+		love.graphics.polygon(mode, math.polygonTrans(x,y,rot,1,vert))
+	end
+
+end

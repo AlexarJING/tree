@@ -2,7 +2,7 @@ local leaf=Class("leaf")
 
 function leaf:initialize(parent,rot)
 	self.parent=parent
-	self.pos=self.parent.lenth/(self.parent.lenthLimit+self.parent.level)
+	self.pos=love.math.random()*self.parent.lenth/(self.parent.lenthLimit+self.parent.level)
 	self.size=1
 	self.angle=rot*Pi/2+rot*love.math.random()*Pi/4+self.parent.parent.angle
 	self.state="grow"
@@ -12,10 +12,20 @@ function leaf:initialize(parent,rot)
 end
 
 function leaf:getPosition()
-	self.x=(self.parent.tx-self.parent.parent.tx)*self.pos+self.parent.parent.tx
-	self.y=(self.parent.ty-self.parent.parent.ty)*self.pos+self.parent.parent.ty
-	local offx,offy=math.axisRot(0,self.size,self.angle)
-	self.cx,self.cy=self.x+offx,self.y+offy
+	if self.state=="dead" then
+		local micro=love.timer.getTime()-math.floor(love.timer.getTime())
+		self.x=self.x+math.sin(micro*2*Pi)
+		self.y=self.y+500/self.y
+		local offx,offy=math.axisRot(0,self.size,self.angle)
+		self.cx,self.cy=self.x+offx,self.y+offy
+	else
+		local micro=love.timer.getTime()-math.floor(love.timer.getTime())
+		self.angle=self.angle+math.sin(micro*2*Pi)/100
+		self.x=(self.parent.tx-self.parent.parent.tx)*self.pos+self.parent.parent.tx
+		self.y=(self.parent.ty-self.parent.parent.ty)*self.pos+self.parent.parent.ty
+		local offx,offy=math.axisRot(0,self.size,self.angle)
+		self.cx,self.cy=self.x+offx,self.y+offy
+	end
 
 end
 
@@ -31,16 +41,29 @@ function leaf:update()
 	elseif self.state=="grown" then
 		if self.life<100 then self.state="dying" end
 	elseif self.state=="dying" then
-		if self.life<0 then self.state="dead" end
-		if self.color[1]==self.color[2] then
-			self.color[1]=self.color[1]-10
-			self.color[2]=self.color[2]-10
-			self.color[3]=self.color[3]-10
-		else
-			self.color[1]=self.color[1]+10
+		if self.life<0 and self.parent.level~=1 then 
+			if love.math.random()>0.9 then
+				self.state="dead" 
+			else
+				table.removeItem(self.parent.leaf,self)
+			end
+		end
+		if self.color[1]<250 and self.color[1]~=self.color[2] then
+			self.color[1]=self.color[1]+2
+		elseif self.color[1]>50 then
+			self.color[1]=self.color[1]-2
+			self.color[2]=self.color[2]-2
+			self.color[3]=self.color[3]-2
+		elseif self.color[1]<50 then
+			if love.math.random()>0.95 then
+				self.state="dead" 
+			else
+				table.removeItem(self.parent.leaf,self)
+			end
 		end
 	else
-		if self.color[1]<0 then
+
+		if self.y>self.parent.core.y then
 			table.removeItem(self.parent.leaf,self)
 		end
 	end

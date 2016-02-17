@@ -9,7 +9,7 @@ function node:initialize(parent,rot)
 	self.level=1
 	self.lenth=1
 	self.width=1
-	self.leafStep=30
+	self.leafStep=20
 	self.leafGrow=self.leafStep*love.math.random()
 	
 	
@@ -54,22 +54,32 @@ end
 
 function node:getPosition()
 	if self.parent then
-		local offX,offY=math.axisRot(0,-self.lenthLimit-self.level,self.angle)
-		self.tx=self.parent.x+offX
-		self.ty=self.parent.y+offY
-		local offX,offY=math.axisRot(0,-self.lenth,self.angle)
-		self.x=self.parent.x+offX
-		self.y=self.parent.y+offY
-		local offX,offY=math.axisRot(-self.width/2,0,self.angle)
-		self.lx=self.x+offX
-		self.ly=self.y+offY
-		self.lx2=self.parent.x+offX
-		self.ly2=self.parent.y+offY
-		local offX,offY=math.axisRot(self.width/2,0,self.angle)
-		self.rx=self.x+offX
-		self.ry=self.y+offY
-		self.rx2=self.parent.x+offX
-		self.ry2=self.parent.y+offY
+		if not self.dead then
+			local micro=love.timer.getTime()-math.floor(love.timer.getTime())
+			self.angle=self.angle+math.sin(micro*2*Pi)/1000
+			local offX,offY=math.axisRot(0,-self.lenthLimit-self.level,self.angle)
+			self.tx=self.parent.x+offX
+			self.ty=self.parent.y+offY
+			local offX,offY=math.axisRot(0,-self.lenth,self.angle)
+			self.x=self.parent.x+offX
+			self.y=self.parent.y+offY
+			local offX,offY=math.axisRot(-self.width/2,0,self.angle)
+			self.lx=self.x+offX
+			self.ly=self.y+offY
+			self.lx2=self.parent.x+offX
+			self.ly2=self.parent.y+offY
+			local offX,offY=math.axisRot(self.width/2,0,self.angle)
+			self.rx=self.x+offX
+			self.ry=self.y+offY
+			self.rx2=self.parent.x+offX
+			self.ry2=self.parent.y+offY
+		else
+			self.y=self.y+self.y/500
+			self.ly=self.ly+self.ly/500
+			self.ry=self.ry+self.ry/500
+			self.ly2=self.ly2+self.ly2/500
+			self.ry2=self.ry2+self.ry2/500
+		end
 	else
 		self.lx=self.x-self.width/2
 		self.ly=self.y
@@ -86,8 +96,20 @@ function node:levelUp()
 		end
 		this=this.parent
 	end
-
 end
+
+function node:allDead()
+	self.dead=true
+	for i,v in ipairs(self.children) do
+		v:allDead()
+	end
+
+	for i,v in ipairs(self.leaf) do
+		v.state="dying"
+	end
+end
+
+
 
 function node:setSpeed(nodeA,nodeB)
 	if nodeA.ty<nodeB.ty then
@@ -117,9 +139,22 @@ function node:addBranch()
 	self:levelUp()
 end
 
+function node:removeBranch()
+	for i,v in ipairs(self.children) do
+		if self.level-v.level>12 then
+			v:allDead()
+		end
+		if v.y>self.core.y then
+			table.remove(self.children, i)
+			return
+		end
+	end
+
+end
+
 function node:addLeaf()
 	self.leafGrow=self.leafGrow-self.lenthSpeed
-	if self.leafGrow<0 then
+	if self.leafGrow<0 and #self.leaf<3 then
 		self.leafGrow=self.leafStep
 		local rnd=love.math.random()
 		if rnd>0.7 then
@@ -136,33 +171,37 @@ end
 
 
 function node:grow()
-	if self.level>=30 then return end
+	
 	self:getPosition()
 	
 
-	self.lenth=self.lenth+self.lenthSpeed
-	if self.lenth>self.lenthLimit+self.level then
-		self.lenth=self.lenthLimit+self.level
+	if not self.dead then
+
+		self.lenth=self.lenth+self.lenthSpeed
+		if self.lenth>self.lenthLimit+self.level then
+			self.lenth=self.lenthLimit+self.level
+		end
+
+		
+
+
+		self.width=self.width+WidthSpeed
+		if self.width>self.level then
+			self.width=self.level
+		end
+
+		if (not self.grown) and self.parent then
+			self:addLeaf()
+		end
+
+		if self.width==self.level and self.lenth==self.lenthLimit+self.level 
+			and (not self.grown) and self.level>=#self.children 
+			and self.core.level<25 then
+			self.grown=true
+			self:addBranch()
+		end
 	end
-
-	
-
-
-	self.width=self.width+WidthSpeed
-	if self.width>self.level then
-		self.width=self.level
-	end
-
-	if (not self.grown) and self.parent then
-		self:addLeaf()
-	end
-
-	if self.width==self.level and self.lenth==self.lenthLimit+self.level 
-		and (not self.grown) and self.level>=#self.children then
-		self.grown=true
-		self:addBranch()
-	end
-
+	self:removeBranch()
 	for i,v in ipairs(self.leaf) do
 		v:update()
 	end
@@ -177,7 +216,11 @@ end
 
 function node:draw()
 	if self.parent then
-		love.graphics.setColor(255,255,255)
+		if self.dead then
+			love.graphics.setColor(50,50,50)
+		else
+			love.graphics.setColor(255,255,255)
+		end
 		love.graphics.polygon("fill",
 			self.lx2,self.ly2,
 			self.rx2,self.ry2,

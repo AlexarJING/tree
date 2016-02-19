@@ -9,6 +9,8 @@ function leaf:initialize(parent,rot)
 	self.life=500
 	self.color={155,255,155,100}
 	self.sizeMax=10+love.math.random()*5
+	self.vert=love.math.createEllipse(0.5,1,20)
+	self:getPosition()
 end
 
 function leaf:getPosition()
@@ -41,15 +43,10 @@ function leaf:update()
 	elseif self.state=="grown" then
 		if self.life<100 then self.state="dying" end
 	elseif self.state=="dying" then
-		if self.life<0 and self.parent.level~=1 then 
-			if love.math.random()>0.9 then
-				self.state="dead" 
-			else
-				table.removeItem(self.parent.leaf,self)
-			end
-		end
+		
 		if self.color[1]<250 and self.color[1]~=self.color[2] then
-			self.color[1]=self.color[1]+2
+			self.color[1]=self.color[1]+ 1+love.math.random()
+			if self.color[1]>self.color[2] then self.color[1]=self.color[2] end
 		elseif self.color[1]>50 then
 			self.color[1]=self.color[1]-2
 			self.color[2]=self.color[2]-2
@@ -62,7 +59,6 @@ function leaf:update()
 			end
 		end
 	else
-
 		if self.y>self.parent.core.y then
 			table.removeItem(self.parent.leaf,self)
 		end
@@ -73,7 +69,7 @@ end
 
 function leaf:draw()
 	love.graphics.setColor(self.color)
-	love.graphics.ellipse( "fill", self.cx, self.cy, self.size/2,self.size,20 ,self.angle )
+	love.graphics.polygon("fill", math.polygonTrans(self.cx,self.cy,self.angle,self.size,self.vert))
 end
 
 return leaf

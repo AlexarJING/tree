@@ -4,6 +4,26 @@
 		"selected_items":
 		[
 			[
+				"setb",
+				"love.graphics.setBlendMode"
+			],
+			[
+				"setp",
+				"love.graphics.setPointStyle"
+			],
+			[
+				"setpoint",
+				"love.graphics.setPointSize"
+			],
+			[
+				"pont",
+				"love.graphics.point"
+			],
+			[
+				"getde",
+				"love.window.getDimensions"
+			],
+			[
 				"update",
 				"updateCD"
 			],
@@ -468,10 +488,6 @@
 				"tostring	(e)"
 			],
 			[
-				"setb",
-				"love.graphics.setBackgroundColor"
-			],
-			[
 				"fon",
 				"love.graphics.setFont"
 			],
@@ -495,15 +511,31 @@
 			"file": "main.lua",
 			"settings":
 			{
-				"buffer_size": 236,
+				"buffer_size": 1260,
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "\nprivate void DrawMoon()\n{\n    int Xpos, Ypos, Rpos;\n    int Xpos1, Xpos2;\n    double Phase;\n \n    Phase = ip;\n    // Width of 'ImageToDraw' Object = Width of 'PicMoon' control    \n    int PageWidth = PicMoon.Width; \n    // Height of 'ImageToDraw' Object = Height of 'PicMoon' control    \n    int PageHeight = PicMoon.Height; \n    // Initiate 'ImageToDraw' Object with size = size of control 'PicMoon' control    \n    Bitmap ImageToDraw = new Bitmap(PageWidth, PageHeight); \n    // Create graphics object for alteration.    \n    Graphics newGraphics = Graphics.FromImage(ImageToDraw);\n \n    Pen PenB = new Pen(Color.Black); // For darkness part of the moon\n    Pen PenW = new Pen(Color.White); // For the lighted part of the moon\n \n    for (Ypos=0; Ypos<= 45; Ypos++)\n    {\n        Xpos = (int)(Math.Sqrt(45*45 - Ypos*Ypos));\n        // Draw darkness part of the moon        \n        Point pB1 = new Point(90-Xpos, Ypos+90);\n        Point pB2 = new Point(Xpos+90, Ypos+90);\n        Point pB3 = new Point(90-Xpos, 90-Ypos);\n        Point pB4 = new Point(Xpos+90, 90-Ypos);\n        newGraphics.DrawLine(PenB, pB1, pB2); \n        newGraphics.DrawLine(PenB, pB3, pB4);        \n       // Determine the edges of the lighted part of the moon       \n       Rpos = 2 * Xpos;\n       if (Phase < 0.5)\n       {\n           Xpos1 = - Xpos;\n           Xpos2 = (int)(Rpos - 2*Phase*Rpos - Xpos);\n       }\n       else\n       {\n          Xpos1 = Xpos;\n          Xpos2 = (int)(Xpos - 2*Phase*Rpos + Rpos);\n       }       \n       // Draw the lighted part of the moon       \n       Point pW1 = new Point(Xpos1+90, 90-Ypos);\n       Point pW2 = new Point(Xpos2+90, 90-Ypos);\n       Point pW3 = new Point(Xpos1+90, Ypos+90);\n       Point pW4 = new Point(Xpos2+90, Ypos+90);\n       newGraphics.DrawLine(PenW, pW1, pW2);\n       newGraphics.DrawLine(PenW, pW3, pW4);\n    }    \n    // Display the bitmap in the picture box.    \n    PicMoon.Image = ImageToDraw;    \n    // Release graphics object    \n    PenB.Dispose();\n    PenW.Dispose();\n    newGraphics.Dispose();\n    ImageToDraw = null;\n}\n ",
+			"settings":
+			{
+				"buffer_size": 2066,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "background.lua",
+			"settings":
+			{
+				"buffer_size": 3077,
+				"line_ending": "Windows"
 			}
 		},
 		{
 			"file": "node.lua",
 			"settings":
 			{
-				"buffer_size": 5057,
+				"buffer_size": 5084,
 				"line_ending": "Windows",
 				"name": "local node"
 			}
@@ -512,7 +544,7 @@
 			"file": "leaf.lua",
 			"settings":
 			{
-				"buffer_size": 2195,
+				"buffer_size": 2192,
 				"line_ending": "Windows",
 				"name": "leaf.lua"
 			}
@@ -521,7 +553,15 @@
 			"file": "conf.lua",
 			"settings":
 			{
-				"buffer_size": 3361,
+				"buffer_size": 3360,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "day.lua",
+			"settings":
+			{
+				"buffer_size": 0,
 				"line_ending": "Windows"
 			}
 		},
@@ -529,7 +569,7 @@
 			"file": "util.lua",
 			"settings":
 			{
-				"buffer_size": 14455,
+				"buffer_size": 14183,
 				"line_ending": "Windows"
 			}
 		}
@@ -641,10 +681,14 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 35.0,
-		"last_filter": "",
+		"height": 392.0,
+		"last_filter": "packagecon",
 		"selected_items":
 		[
+			[
+				"packagecon",
+				"Package Control: Install Package"
+			],
 			[
 				"remove",
 				"Package Control: Remove Package"
@@ -710,6 +754,11 @@
 	],
 	"file_history":
 	[
+		"/F/Love2D Project/tree/weather.lua",
+		"/F/Love2D Project/tree/day.lua",
+		"/F/Love2D Project/tree/season.lua",
+		"/F/Love2D Project/tree/background.lua",
+		"/F/Love2D Project/tree/foreground.lua",
 		"/F/Love2D Project/space war/scr/game/game.lua",
 		"/F/Love2D Project/space war/tasks/standard.lua",
 		"/F/Love2D Project/space war/main.lua",
@@ -832,12 +881,7 @@
 		"/F/Love2D Project/space war/obj/ships/fearless.lua",
 		"/F/Love2D Project/space war/obj/ships_param/collector.lua",
 		"/F/Love2D Project/space war/obj/ships_param/bee.lua",
-		"/F/Love2D Project/space war/obj/ships_param/annihilator.lua",
-		"/F/Love2D Project/space war/obj/ships/destroyer.lua",
-		"/F/Love2D Project/space war/obj/ships_param/cruiser.lua",
-		"/F/Love2D Project/space war/obj/ships_param/defender.lua",
-		"/F/Love2D Project/space war/obj/ships/defender.lua",
-		"/F/Love2D Project/space war/obj/ships/cruiser.lua"
+		"/F/Love2D Project/space war/obj/ships_param/annihilator.lua"
 	],
 	"find":
 	{
@@ -856,6 +900,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"x",
+			"sun",
+			"remove",
+			"ball",
 			"dead",
 			"self.angle",
 			"print",
@@ -979,11 +1027,7 @@
 			"minimap",
 			"state",
 			"game.ctrlLock",
-			"game.ctrllock",
-			"default",
-			"state",
-			"add",
-			"setstate"
+			"game.ctrllock"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -991,6 +1035,9 @@
 		"regex": false,
 		"replace_history":
 		[
+			"y",
+			"moon",
+			"aura",
 			"love.mouse.isDown(MOUSE_RIGHT)",
 			"love.mouse.isDown(MOUSE_LEFT)",
 			"fireParam",
@@ -1115,10 +1162,7 @@
 			"hand",
 			"field",
 			"bank",
-			"lower.",
-			"upper",
-			"lower",
-			"upper"
+			"lower."
 		],
 		"reverse": false,
 		"show_context": true,
@@ -1129,7 +1173,7 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -1138,15 +1182,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 236,
+						"buffer_size": 1260,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								148,
-								148
+								287,
+								287
 							]
 						],
 						"settings":
@@ -1158,24 +1202,83 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 2,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "node.lua",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5057,
+						"buffer_size": 2066,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3480,
-								3480
+								214,
+								214
+							]
+						],
+						"settings":
+						{
+							"auto_name": "",
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "background.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3077,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								948,
+								948
+							]
+						],
+						"settings":
+						{
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/Lua/Lua.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1188.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "node.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5084,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1144,
+								1148
 							]
 						],
 						"settings":
@@ -1185,27 +1288,27 @@
 							"syntax": "Packages/Lua/Lua.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 3125.0,
+						"translation.y": 2663.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 4,
 					"file": "leaf.lua",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2195,
+						"buffer_size": 2192,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1380,
-								1380
+								1633,
+								1633
 							]
 						],
 						"settings":
@@ -1215,27 +1318,27 @@
 							"syntax": "Packages/Lua/Lua.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 331.0,
+						"translation.y": 726.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 5,
 					"file": "conf.lua",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3361,
+						"buffer_size": 3360,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1149,
-								1149
+								810,
+								810
 							]
 						],
 						"settings":
@@ -1249,24 +1352,52 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 5,
 					"type": "text"
 				},
 				{
-					"buffer": 4,
-					"file": "util.lua",
-					"semi_transient": false,
+					"buffer": 6,
+					"file": "day.lua",
+					"semi_transient": true,
 					"settings":
 					{
-						"buffer_size": 14455,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								12915,
-								12915
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Lua/Lua.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "util.lua",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 14183,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4104,
+								4104
 							]
 						],
 						"settings":
@@ -1275,10 +1406,10 @@
 							"syntax": "Packages/Lua/Lua.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 12263.0,
+						"translation.y": 3441.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 4,
 					"type": "text"
 				}
 			]
@@ -1327,7 +1458,7 @@
 	"project": "tree.sublime-project",
 	"replace":
 	{
-		"height": 56.0
+		"height": 70.0
 	},
 	"save_all_on_build": true,
 	"select_file":

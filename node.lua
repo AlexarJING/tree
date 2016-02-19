@@ -22,8 +22,8 @@ function node:initialize(parent,rot)
 		self.core=self.parent.core
 	else
 		self.angle=0
-		self.x=602
-		self.y=700
+		self.x=1500
+		self.y=800
 		self.tx=self.x
 		self.ty=self.y
 		self.core=self
@@ -122,6 +122,7 @@ function node:setSpeed(nodeA,nodeB)
 end
 
 function node:addBranch()
+	if self.core.level>=20 then return end
 	local rnd=love.math.random()
 	if rnd>0.6 then
 		table.insert(self.children,node(self))	
@@ -153,8 +154,9 @@ function node:removeBranch()
 end
 
 function node:addLeaf()
+	if #self.leaf>3 then return end
 	self.leafGrow=self.leafGrow-self.lenthSpeed
-	if self.leafGrow<0 and #self.leaf<3 then
+	if self.leafGrow<0 then
 		self.leafGrow=self.leafStep
 		local rnd=love.math.random()
 		if rnd>0.7 then
@@ -190,13 +192,12 @@ function node:grow()
 			self.width=self.level
 		end
 
-		if (not self.grown) and self.parent then
+		if self.level==1 and self.parent then
 			self:addLeaf()
 		end
 
 		if self.width==self.level and self.lenth==self.lenthLimit+self.level 
-			and (not self.grown) and self.level>=#self.children 
-			and self.core.level<25 then
+			and (not self.grown) and self.level>=#self.children then
 			self.grown=true
 			self:addBranch()
 		end

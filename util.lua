@@ -620,8 +620,8 @@ function love.graphics.setStencil(func)
 	end
 end
 
-local _ellipse=love.graphics.ellipse
-local function createEllipse(rx,ry,segments)
+
+function love.math.createEllipse(rx,ry,segments)
 	segments = segments or 30
 	local vertices = {}
 	for i=0, segments do
@@ -633,14 +633,4 @@ local function createEllipse(rx,ry,segments)
 	end
  	
 	return vertices
-end
-
-function love.graphics.ellipse( mode, x, y, rx,ry,segments ,rot )
-	if not rot then 
-		_ellipse( mode, x, y, rx, ry)
-	else
-		local vert=createEllipse(rx,ry,segments)
-		love.graphics.polygon(mode, math.polygonTrans(x,y,rot,1,vert))
-	end
-
 end

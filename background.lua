@@ -51,10 +51,14 @@ bg.moon.aura={
 
 bg.atmos=love.graphics.newMesh(
 	{	
+		{1500,1500,0,0,50,50,100},
 		{0,0,0,0,100,215,255},
 		{3000,0,0,0,100,215,255},
+		{3000,1500,0,0,200,50,50},
 		{3000,3000,0,0,0,0,0},
 		{0,3000,0,0,0,0,0},
+		{0,1500,0,0,200,50,50},
+		{0,0,0,0,100,215,255},
 	}	
 		)
 
@@ -115,7 +119,7 @@ love.graphics.setCanvas(bg.canvas)
 		love.graphics.points(x+1500, y+1500)
 	end
 	
-	love.graphics.setColor(255,255,255,50)
+	love.graphics.setColor(255,255,215,50)
 	love.graphics.draw(bg.sun.aura.shape,bg.sun.aura.x,bg.sun.aura.y,0,bg.sun.aura.r,bg.sun.aura.r)
 
 	love.graphics.setColor(255,255,200)

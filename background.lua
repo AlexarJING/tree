@@ -137,9 +137,9 @@ bg.rot=0
 
 function bg:draw()
 	
-	--self.rot=self.rot+ love.timer.getDelta()*Pi/10
+	self.rot=self.rot+ love.timer.getDelta()*Pi/10
 	love.graphics.setColor(255,255,255)
 	love.graphics.draw(bg.canvas,1500,1500,self.rot,1,1,1500,1500)
-	drawCloud()
+	--drawCloud()
 end
 return bg

@@ -634,3 +634,4 @@ function love.math.createEllipse(rx,ry,segments)
  	
 	return vertices
 end
+

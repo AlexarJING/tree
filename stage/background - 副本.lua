@@ -18,6 +18,44 @@ local function CreateCircle(segments,alpha)
 	return love.graphics.newMesh(vertices, "fan")
 end
  
+local function CreateAura(segments,alpha)
+	segments = segments or 40
+	alpha = alpha and 0 or 255
+	local x,y,angle,r
+	local vertices = {}
+	for i=0, segments do
+		table.insert(vertices, {0, 0})
+		angle = (i / segments) * math.pi * 2
+		r= love.math.random()
+		--r= r>0.9 and r*2 or r
+		x = math.cos(angle)* r
+		y = math.sin(angle)*r
+		table.insert(vertices, {x, y,_,_,_,_,_,alpha})
+		angle = ((i+1) / segments) * math.pi * 2
+		x = math.cos(angle)* r
+		y = math.sin(angle)*r
+		table.insert(vertices, {x, y,_,_,_,_,_,alpha})
+	end
+	return love.graphics.newMesh(vertices, "triangles")
+end
+
+local function glow(r)
+	segments = segments or 100
+	local vertices = {}
+	for i=0, segments do
+		local angle = (i / segments) * math.pi * 2
+		local x = math.cos(angle)
+		local y = math.sin(angle)	
+		local x2 =math.cos(angle)*r
+		local y2= math.sin(angle)*r
+		table.insert(vertices, {x, y})
+		table.insert(vertices, {x2, y2,_,_,_,_,_,0})
+	end
+	table.insert(vertices, {1, 0})
+	return love.graphics.newMesh(vertices, "strip")
+
+end
+
 
 bg.sun.ball={
 	shape=CreateCircle(),
@@ -26,13 +64,18 @@ bg.sun.ball={
 	r=30
 }
 
-bg.sun.aura={
-	shape=CreateCircle(_,true),
+bg.sun.aura_inner={
+	shape=glow(0.8),
 	x=1500,
 	y=400,
-	r=2000
+	r=30
 }
-
+bg.sun.aura_outer={
+	shape=glow(2),
+	x=1500,
+	y=400,
+	r=30
+}
 bg.moon={}
 
 bg.moon.ball={
@@ -49,18 +92,7 @@ bg.moon.aura={
 	r=500
 }
 
-bg.atmos=love.graphics.newMesh(
-	{	
-		{1500,1500,0,0,50,50,100},
-		{0,0,0,0,100,215,255},
-		{3000,0,0,0,100,215,255},
-		{3000,1500,0,0,200,50,50},
-		{3000,3000,0,0,0,0,0},
-		{0,3000,0,0,0,0,0},
-		{0,1500,0,0,200,50,50},
-		{0,0,0,0,100,215,255},
-	}	
-		)
+
 
 
 
@@ -119,11 +151,14 @@ love.graphics.setCanvas(bg.canvas)
 		love.graphics.points(x+1500, y+1500)
 	end
 	
-	love.graphics.setColor(255,255,215,50)
-	love.graphics.draw(bg.sun.aura.shape,bg.sun.aura.x,bg.sun.aura.y,0,bg.sun.aura.r,bg.sun.aura.r)
+	
 
-	love.graphics.setColor(255,255,200)
+	love.graphics.setColor(255,255,255)
 	love.graphics.draw(bg.sun.ball.shape,bg.sun.ball.x,bg.sun.ball.y,0,bg.sun.ball.r,bg.sun.ball.r)
+	love.graphics.setColor(255,255,200)
+	love.graphics.draw(bg.sun.aura_inner.shape,bg.sun.aura_inner.x,bg.sun.aura_inner.y,0,bg.sun.aura_inner.r,bg.sun.aura_inner.r)
+	love.graphics.setColor(255,255,200,255)
+	love.graphics.draw(bg.sun.aura_outer.shape,bg.sun.aura_outer.x,bg.sun.aura_outer.y,0,bg.sun.aura_outer.r,bg.sun.aura_outer.r)
 
 	love.graphics.setColor(255,255,255,50)
 	love.graphics.draw(bg.moon.aura.shape,bg.moon.aura.x,bg.moon.aura.y,0,bg.moon.aura.r,bg.moon.aura.r)
@@ -141,7 +176,7 @@ bg.rot=0
 
 function bg:draw()
 	
-	self.rot=self.rot+ love.timer.getDelta()*Pi/10
+	--self.rot=self.rot+ love.timer.getDelta()*Pi/10
 	love.graphics.setColor(255,255,255)
 	love.graphics.draw(bg.canvas,1500,1500,self.rot,1,1,1500,1500)
 	--drawCloud()

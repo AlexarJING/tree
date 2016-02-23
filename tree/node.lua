@@ -1,8 +1,8 @@
 local node=Class("node")
-
+local Leaf = require "tree/leaf"
 local WidthSpeed=0.01
 local ApicalRate=1.7
-function node:initialize(parent,rot)
+function node:init(parent,rot)
 	self.parent=parent
 	self.children={}
 	self.leaf={}
@@ -22,8 +22,8 @@ function node:initialize(parent,rot)
 		self.core=self.parent.core
 	else
 		self.angle=0
-		self.x=1500
-		self.y=800
+		self.x=2500
+		self.y=2000
 		self.tx=self.x
 		self.ty=self.y
 		self.core=self
@@ -172,7 +172,7 @@ function node:addLeaf()
 end
 
 
-function node:grow()
+function node:update()
 	
 	self:getPosition()
 	
@@ -208,7 +208,7 @@ function node:grow()
 	end
 
 	for i,v in ipairs(self.children) do
-		v:grow()
+		v:update()
 	end
 
 

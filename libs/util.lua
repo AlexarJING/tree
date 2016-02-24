@@ -12,13 +12,10 @@ function love.graphics.hexagon(mode, x,y,l)
 	love.graphics.polygon(mode, x,y,x+l,y,x+1.5*l,y+i,x+l,y+2*i,x,y+2*i,x-l*0.5,y+i)
 end
 function math.getDistance(x1,y1,x2,y2)
-	
    return ((x1-x2)^2+(y1-y2)^2)^0.5
 end
 function math.axisRot(x,y,rot)
-	local xx=math.cos(rot)*x-math.sin(rot)*y
-	local yy=math.cos(rot)*y+math.sin(rot)*x
-	return xx,yy
+	return math.cos(rot)*x-math.sin(rot)*y,math.cos(rot)*y+math.sin(rot)*x
 end
 
 function math.axisRot_P(x,y,x1,y1,rot)
@@ -42,43 +39,7 @@ function math.getRot(x1,y1,x2,y2) --p1->p2 direction
 	if angle==0 then return 0 end
 	return -angle
 end
-function love.graphics.rect(x,y,w,h)
-	local r,g,b = love.graphics.getColor()
-	love.graphics.setColor(r,g,b,100)
-	love.graphics.rectangle('fill', x,y,w,h)
-	love.graphics.setColor(r,g,b)
-	love.graphics.rectangle('line', x,y,w,h)
-end
-local polygon=love.graphics.polygon
-function love.graphics.polygon(mode,...)
-	if mode=="outline" then
-		local r,g,b,a = love.graphics.getColor()
-		love.graphics.setColor(r/2,g/2,b/2,a)
-		love.graphics.polygon('fill', ...)
-		if r+100<256 then r=r+100 end
-		if g+100<256 then g=g+100 end
-		if b+100<256 then b=b+100 end
-		love.graphics.setColor(r,g,b,a)
-		love.graphics.polygon('line', ...)
-	else
-		polygon(mode,...)
-	end
-end
-local circle=love.graphics.circle
-function love.graphics.circle(mode,...)
-	if mode=="outline" then
-		local r,g,b,a = love.graphics.getColor()
-		love.graphics.setColor(r/2,g/2,b/2,a)
-		love.graphics.circle('fill', ...)
-		if r+100<256 then r=r+100 end
-		if g+100<256 then g=g+100 end
-		if b+100<256 then b=b+100 end
-		love.graphics.setColor(r,g,b,a)
-		love.graphics.circle('line', ...)
-	else
-		circle(mode,...)
-	end
-end
+
 function love.graphics.randomColor()
 	local r=math.random(0,255)
 	local g=math.random(0,255)

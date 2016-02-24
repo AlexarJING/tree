@@ -1,18 +1,32 @@
 local Cloud=Class("cloud")
 local stageSize=5000
 
-function Cloud:init(bg,rot,rx,ry,gray)
+local function CreateCircle(segments,alpha)
+	segments = segments or 10
+	alpha = alpha and 0 or 255
+	local vertices = {}
+	table.insert(vertices, {0, 0})
+	for i=0, segments do
+		local angle = (i / segments) * math.pi * 2
+		local x = math.cos(angle)
+		local y = math.sin(angle)
+		table.insert(vertices, {x, y,_,_,_,_,_,alpha})
+	end
+	return love.graphics.newMesh(vertices, "fan")
+end
+
+function Cloud:init(bg,rx,ry,gray)
 	self.parent=bg
 	self.parts={}
-	self.height=1000
-	self.thickness=2000
+	self.height=1150
+	self.thickness=1500
 	self.rx = rx or 1000
-	self.ry = ry or 100
-	self.gray = gray or 100
-	self.speed = speed or 0.1
+	self.ry = ry or 200
+	self.gray = gray or 155
+	self.speed = speed or 0.2
 	self.body  = love.graphics.newCanvas(self.rx*4,self.ry*4)
-	self.pos= rot or 0
 	self:create()
+	self.ball=CreateCircle()
 end
 
 function Cloud:create()
@@ -20,10 +34,9 @@ function Cloud:create()
 		local part={
 			x=(0.5-love.math.random())*self.rx*2,
 			y=(0.5-love.math.random())*self.ry*2,
-			r=(1+love.math.random())*self.ry/2,
+			r=(1+love.math.random())*self.ry/5,
 			vx=(0.5-love.math.random())*self.speed,
 			vy=(0.5-love.math.random())*self.speed,
-			vr=(0.5-love.math.random())*self.speed,
 			vc=(0.5-love.math.random())*self.speed,
 			gray=(0.5-love.math.random())*100+self.gray
 		}
@@ -34,8 +47,8 @@ end
 
 
 function Cloud:update(dt)
-	self.rot=self.parent.rot
-	self.x,self.y=math.axisRot(0,self.height,self.parent.rot+self.pos)
+	--self.rot=self.parent.rot
+	--self.x,self.y=math.axisRot(0,self.height,self.parent.rot+self.pos)
 	love.graphics.setCanvas(self.body)
 	love.graphics.clear()
 	for i,v in ipairs(self.parts) do	
@@ -55,33 +68,13 @@ function Cloud:update(dt)
 			v.vy=math.abs(v.vy)
 			v.y=-self.ry
 		end
-		v.r=v.r+v.vr
-		if v.r>self.ry then 
-			v.vr=-math.abs(v.vr) 
-			v.r = self.ry
-		elseif v.r<self.ry/2 then
-			v.vr=math.abs(v.vr)
-			v.r = self.ry/2
-		end
-		if v.r>self.ry then print(v.r,v.vr,self.ry) end
-		--v.gray=v.gray+v.vc
-		if v.gray>self.gray+100 or v.gray>255 then 
-			if v.gray>255 then
-				v.gray=255
-			else
-				v.gray=self.gray+100
-			end
-			v.vc=-v.vc 
-		elseif v.gray<self.gray-100 or v.gray<0 then 
-			if v.gray<0 then
-				v.gray=0
-			else
-				v.gray=self.gray-100
-			end
-			v.vc=-v.vc 
-		end
-		love.graphics.setColor(self.gray,self.gray,self.gray,10)
-		love.graphics.circle("fill", 2*self.rx+v.x,2*self.ry+v.y/(math.abs(v.x)/self.rx+1)-math.abs(v.x)/20,v.r)
+		
+
+		local alpha = 40-math.abs(v.y)+self.rx*40/math.abs(v.x)
+		if alpha<0 then alpha=0 end;if alpha>40 then alpha=40 end
+		love.graphics.setColor(self.gray,self.gray,self.gray,40)
+		--love.graphics.circle("fill", 2*self.rx+v.x,2*self.ry+v.y+math.abs(v.x)/10,v.r,10)
+		love.graphics.draw(self.ball, 2*self.rx+v.x,2*self.ry+v.y+math.abs(v.x)/10,0,v.r,v.r)
 	end
 	love.graphics.setCanvas()
 end
@@ -89,10 +82,9 @@ end
  
 function Cloud:draw()
 	love.graphics.setColor(255, 255,255)
-	--love.graphics.circle("fill", self.x+stageSize/2, self.y+stageSize/2,10)
-	love.graphics.print("123",self.x+stageSize/2, self.y+stageSize/2, self.rot, 20,20,self.rx,self.ry)
-	love.graphics.draw(self.body, self.x+stageSize/2, self.y+stageSize/2,self.rot,1,1,self.rx*2,self.ry*2)
-
+	love.graphics.draw(self.body, stageSize/2, -self.height+stageSize/2,self.rot,1,1,self.rx*2,self.ry*2)
+	love.graphics.setColor(0,0,0,255-self.gray)
+	love.graphics.rectangle("fill", 0,0,5000,2500)
 end
 
 

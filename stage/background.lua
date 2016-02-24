@@ -1,8 +1,8 @@
 local bg=Class("bg")
-local Sky = require "objects/sky"
+local Sky = require "objects/sky2"
 local Sun = require "objects/sun"
 local Moon = require "objects/moon"
-local Cloud = require "objects/cloud"
+
 
 function bg:init(scene)
 	self.parent=scene
@@ -10,7 +10,7 @@ function bg:init(scene)
 	table.insert(self.child,Sky(self))
 	table.insert(self.child,Sun(self))
 	table.insert(self.child,Moon(self))
-	table.insert(self.child,Cloud(self))
+	
 	self.rot=0
 end
 
@@ -18,7 +18,8 @@ end
 
 
 function bg:update(dt)
-	self.rot = (self.parent.timer.hour+self.parent.timer.minut/60)*Pi/12+Pi
+	self.pos= self.parent.timer.hour+self.parent.timer.minut/60
+	self.rot = self.pos*Pi/12+Pi
 	for i,v in ipairs(self.child) do
 		v:update()
 	end

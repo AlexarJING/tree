@@ -7,7 +7,7 @@ function timer:init()
 	self.day=1
 	self.hour=0
 	self.minut=0
-	self.multiply=1
+	self.multiply=100
 	self.debug=true
 end
 

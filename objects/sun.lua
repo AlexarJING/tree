@@ -1,6 +1,6 @@
 local sun=Class("sun")
 local stageSize=5000
-local sunPos=1300
+local sunPos=1350
 local function circle(segments,alpha)
 	segments = segments or 40
 	alpha = alpha and 0 or 255
@@ -60,18 +60,26 @@ end
 
 
 function sun:update()
+	
 	self.x,self.y=math.axisRot(0,-sunPos,self.parent.rot)
-	self.rot=-self.parent.rot
+	self.y=self.y*0.1
+	if self.y<0 then
+		self.visible=true
+	else
+		self.visible=false
+	end
+	self.rot=self.parent.rot
 end
 
 function sun:draw()
-	love.graphics.setColor(100,200,255,100)
-	love.graphics.draw(self.aura, self.x+stageSize/2, self.y+stageSize/2, self.rot, self.r*50,self.r*50)
+	if not self.visible then return end
+	love.graphics.setColor(255,255,255,100)
+	love.graphics.draw(self.aura, self.x+stageSize/2, self.y+stageSize/3.2, self.rot, self.r*10,self.r*10)
 	love.graphics.setColor(255, 255,255)
-	love.graphics.draw(self.body, self.x+stageSize/2, self.y+stageSize/2, self.rot, self.r,self.r)
+	love.graphics.draw(self.body, self.x+stageSize/2, self.y+stageSize/3.2, self.rot, self.r,self.r)
 	love.graphics.setColor(255,255,200)
-	love.graphics.draw(self.inner, self.x+stageSize/2, self.y+stageSize/2, self.rot, self.r,self.r)
-	love.graphics.draw(self.outer, self.x+stageSize/2, self.y+stageSize/2, self.rot, self.r,self.r)
+	love.graphics.draw(self.inner, self.x+stageSize/2, self.y+stageSize/3.2, self.rot, self.r,self.r)
+	love.graphics.draw(self.outer, self.x+stageSize/2, self.y+stageSize/3.2, self.rot, self.r,self.r)
 
 end
 

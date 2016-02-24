@@ -17,8 +17,8 @@ end
 function scene:draw()
 	
 	love.graphics.push()
-	--love.graphics.scale(0.2, 0.4)
-	love.graphics.translate( -1400, -1200 )
+	--love.graphics.scale(0.4, 0.4)
+	love.graphics.translate( -2000, -1300 )
     self.bg:draw()
     self.fg:draw()	
     love.graphics.pop()

@@ -1,6 +1,6 @@
 local moon=Class("moon")
 local stageSize=5000
-local moonPos=1000
+local moonPos=1050
 local function circle(segments,alpha)
 	segments = segments or 40
 	alpha = alpha and 0 or 255
@@ -50,7 +50,7 @@ end
 
 function moon:init(bg)
 	self.parent=bg
-	self.r=30
+	self.r=40
 	self.rot=0
 	self.body = love.graphics.newCanvas(self.r*2, self.r*2)
 	self.aura=aura(_,true)
@@ -84,7 +84,13 @@ end
 
 function moon:update()
 	self.x,self.y=math.axisRot(0,moonPos,self.parent.rot)
-	self.rot=self.parent.rot
+	self.y=self.y*0.1
+	if self.y<0 then
+		self.visible=true
+	else
+		self.visible=false
+	end
+	self.rot=Pi-math.getRot(self.x,self.y,stageSize/2,stageSize/2)
 	self.phase=self.parent.parent.timer.day
 	love.graphics.setCanvas(self.body)
 	self:drawMoon()
@@ -92,11 +98,11 @@ function moon:update()
 end
 
 function moon:draw()
-
+	if not self.visible then return end
 	love.graphics.setColor(255,250,155,46-math.abs(self.phase-15)*3)
-	love.graphics.draw(self.aura, self.x+stageSize/2, self.y+stageSize/2, self.rot, self.r*10,self.r*10)
+	love.graphics.draw(self.aura, self.x+stageSize/2, self.y+stageSize/3.2, self.rot, self.r*10,self.r*10)
 	love.graphics.setColor(255, 255,255)
-	love.graphics.draw(self.body, self.x+stageSize/2, self.y+stageSize/2, self.rot, 1,1,self.r,self.r)
+	love.graphics.draw(self.body, self.x+stageSize/2, self.y+stageSize/3.2, self.rot, 1,1,self.r,self.r)
 end
 
 

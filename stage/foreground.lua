@@ -2,14 +2,16 @@ local fg=Class("fg")
 local Ground= require "objects/ground"
 local Tree = require "tree/node"
 local Cloud = require "objects/cloud"
-local Rain = require "effect/rain"
-local Snow= require "effect/snow"
+local Rain = require "objects/rain"
+local Snow= require "objects/snow"
+
 
 function fg:init()
 	self.parent=scene
 	self.child={}
 	table.insert(self.child,Cloud(self))
 	table.insert(self.child,Rain(self))
+	--table.insert(self.child,Lightning(self))
 	--table.insert(self.child,Snow(self))
 	table.insert(self.child,Ground(self))
 	table.insert(self.child,Tree())

@@ -1,4 +1,6 @@
 local rain=Class("rain")
+local Lightning= require "objects/lightning"
+
 local stageSize=5000
 function rain:init(fg)
 	self.parent=fg
@@ -6,8 +8,9 @@ function rain:init(fg)
 	self.rad = rad or 1500
 	self.thickness = thickness or 300
 	self.wind=  wind or 3
-
+	self.lightning = lightning or 10
 	self.drops={}
+	self.lightnings={}
 end
 
 function rain:createDrop()
@@ -22,6 +25,9 @@ end
 
 
 function rain:update()
+	if self.lightning and love.math.random()>1-1/self.lightning then  
+		table.insert(self.lightnings, Lightning(self))
+	end
 	if #self.drops<self.thickness then
 		for i=1,3 do
 			table.insert(self.drops,self:createDrop())
@@ -37,6 +43,10 @@ function rain:update()
 			table.remove(self.drops, i)
 		end
 	end
+
+	for i,v in ipairs(self.lightnings) do
+		v:update()
+	end
 end
 
 
@@ -47,7 +57,9 @@ function rain:draw()
 	for i,v in ipairs(self.drops) do
 		love.graphics.line(v.lx, v.ly, v.x, v.y)
 	end
-	
+	for i,v in ipairs(self.lightnings) do
+		v:draw()
+	end
 end
 
 return rain

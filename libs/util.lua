@@ -411,6 +411,10 @@ function math.HSVtoRGB(h,s,v)
   return math.floor(r),math.floor(g),math.floor(b)
 end
 
+
+
+
+
 function love.graphics.drawLightning(x1,y1,x2,y2,displace,curDetail)
   if displace < curDetail then
 	  love.graphics.line(x1, y1, x2, y2)

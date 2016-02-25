@@ -10,7 +10,9 @@ Resolution={
 }
 
 
---背景层不变化scale,前景层可以缩放 同时，限定在树任何部分可见的范围内
+
+
+
 
 function love.load()
 	love.graphics.setBackgroundColor(0,0,50)
@@ -18,6 +20,7 @@ function love.load()
 	state.game=require("scene/game")
 	Gamestate.registerEvents()
 	Gamestate.switch(state.game)
+	
 end
 
 function love.update(dt)
@@ -28,7 +31,7 @@ end
 
 
 function love.draw()
-
+	
 end
 
 

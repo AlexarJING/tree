@@ -22,7 +22,7 @@ function Cloud:init(bg,rx,ry,gray)
 	self.thickness=1500
 	self.rx = rx or 1000
 	self.ry = ry or 200
-	self.gray = gray or 155
+	self.gray = gray or 50
 	self.speed = speed or 0.2
 	self.body  = love.graphics.newCanvas(self.rx*4,self.ry*4)
 	self:create()
@@ -72,7 +72,7 @@ function Cloud:update(dt)
 
 		local alpha = 40-math.abs(v.y)+self.rx*40/math.abs(v.x)
 		if alpha<0 then alpha=0 end;if alpha>40 then alpha=40 end
-		love.graphics.setColor(self.gray,self.gray,self.gray,40)
+		love.graphics.setColor(self.gray,self.gray,self.gray,alpha)
 		--love.graphics.circle("fill", 2*self.rx+v.x,2*self.ry+v.y+math.abs(v.x)/10,v.r,10)
 		love.graphics.draw(self.ball, 2*self.rx+v.x,2*self.ry+v.y+math.abs(v.x)/10,0,v.r,v.r)
 	end
@@ -83,8 +83,6 @@ end
 function Cloud:draw()
 	love.graphics.setColor(255, 255,255)
 	love.graphics.draw(self.body, stageSize/2, -self.height+stageSize/2,self.rot,1,1,self.rx*2,self.ry*2)
-	love.graphics.setColor(0,0,0,255-self.gray)
-	love.graphics.rectangle("fill", 0,0,5000,2500)
 end
 
 

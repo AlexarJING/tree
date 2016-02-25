@@ -1,8 +1,8 @@
 Pi=math.pi
 love.system.run=love.system.openURL
-gr = love.graphics
-kb = love.keyboard
-ma = love.math
+lg = love.graphics
+lk = love.keyboard
+lm = love.math
 function w() return gr.getWidth() end
 function h() return gr.getHeight() end
 

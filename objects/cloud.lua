@@ -19,10 +19,10 @@ function Cloud:init(bg,rx,ry,gray)
 	self.parent=bg
 	self.parts={}
 	self.height=1150
-	self.thickness=1500
-	self.rx = rx or 1000
-	self.ry = ry or 200
-	self.gray = gray or 50
+	self.thickness=500
+	self.rx = rx or 300
+	self.ry = ry or 100
+	self.gray = gray or 255
 	self.speed = speed or 0.2
 	self.body  = love.graphics.newCanvas(self.rx*4,self.ry*4)
 	self:create()

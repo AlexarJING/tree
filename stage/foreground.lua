@@ -9,12 +9,12 @@ local Snow= require "objects/snow"
 function fg:init()
 	self.parent=scene
 	self.child={}
-	--table.insert(self.child,Cloud(self))
+	table.insert(self.child,Cloud(self))
 	--table.insert(self.child,Rain(self))
 	--table.insert(self.child,Lightning(self))
 	--table.insert(self.child,Snow(self))
 	table.insert(self.child,Ground(self))
-	table.insert(self.child,Tree())
+	--table.insert(self.child,Tree())
 end
 
 

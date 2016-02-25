@@ -8,8 +8,8 @@ function bg:init(scene)
 	self.parent=scene
 	self.child={}
 	table.insert(self.child,Sky(self))
-	--table.insert(self.child,Sun(self))
-	--table.insert(self.child,Moon(self))
+	table.insert(self.child,Sun(self))
+	table.insert(self.child,Moon(self))
 	self.brightness=255
 	self.colorful=255
 	self.rot=0

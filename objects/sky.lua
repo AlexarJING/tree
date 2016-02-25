@@ -1,4 +1,4 @@
-local stageSize=5000
+ local stageSize=5000
 local sky=Class("sky")
 
 function sky:init(bg)

@@ -18,10 +18,10 @@ end
 function Cloud:init(bg,rx,ry,gray)
 	self.parent=bg
 	self.parts={}
-	self.height=1150
-	self.thickness=500
-	self.rx = rx or 300
-	self.ry = ry or 100
+	self.height=1100
+	self.thickness=100
+	self.rx = rx or 100
+	self.ry = ry or 50
 	self.gray = gray or 255
 	self.speed = speed or 0.2
 	self.body  = love.graphics.newCanvas(self.rx*4,self.ry*4)
@@ -34,7 +34,7 @@ function Cloud:create()
 		local part={
 			x=(0.5-love.math.random())*self.rx*2,
 			y=(0.5-love.math.random())*self.ry*2,
-			r=(1+love.math.random())*self.ry/5,
+			r=(1+love.math.random())*self.rx/5,
 			vx=(0.5-love.math.random())*self.speed,
 			vy=(0.5-love.math.random())*self.speed,
 			vc=(0.5-love.math.random())*self.speed,
@@ -45,11 +45,17 @@ function Cloud:create()
 
 end
 
+function Cloud:reset()
+
+
+end
+
 
 function Cloud:update(dt)
 	--self.rot=self.parent.rot
 	--self.x,self.y=math.axisRot(0,self.height,self.parent.rot+self.pos)
 	love.graphics.setCanvas(self.body)
+	
 	love.graphics.clear()
 	for i,v in ipairs(self.parts) do	
 		v.x=v.x+v.vx
@@ -72,8 +78,8 @@ function Cloud:update(dt)
 
 		local alpha = 40-math.abs(v.y)+self.rx*40/math.abs(v.x)
 		if alpha<0 then alpha=0 end;if alpha>40 then alpha=40 end
-		love.graphics.setColor(self.gray,self.gray,self.gray,alpha)
-		--love.graphics.circle("fill", 2*self.rx+v.x,2*self.ry+v.y+math.abs(v.x)/10,v.r,10)
+		--love.graphics.setBlendMode("add")
+		love.graphics.setColor(self.gray,self.gray,self.gray,45)
 		love.graphics.draw(self.ball, 2*self.rx+v.x,2*self.ry+v.y+math.abs(v.x)/10,0,v.r,v.r)
 	end
 	love.graphics.setCanvas()

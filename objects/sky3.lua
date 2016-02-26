@@ -1,6 +1,6 @@
 local stageSize=5000
 local sky=Class("sky3")
-
+local colorful=1
 --蓝 100,215,255
 --红 200,50,50
 --黑 0，0，0
@@ -21,11 +21,10 @@ function sky:init(bg)
 	
 	self.colorMesh=love.graphics.newMesh( vert,"strip")
 	self.color={0,0,0,0}
+
 	self.parent=bg
 	--self:initDraw()
 end
-
-local colorStep={41,}
 
 
 function sky:colorCtrl()
@@ -34,6 +33,9 @@ function sky:colorCtrl()
 	self.color[2]=160-26*math.abs(12-hour) --0，160
 	self.color[3]=255-42*math.abs(12-hour) --0，255
 	
+	for i=1,3 do
+		self.color[i]=self.color[i]+(128-self.color[i])*(1-colorful)
+	end
 
 	if hour>9 and hour<15 then
 		self.brightness=255

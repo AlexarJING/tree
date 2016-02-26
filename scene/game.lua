@@ -3,9 +3,12 @@ local scene = Gamestate.new()
 
 
 function scene:init()
-	self.bg =require "stage/background"(self)
-	self.fg =require "stage/foreground"(self)
-	self.timer = require "stage/timer"(self)
+	game={}
+	game.bg =require "stage/background"()
+	game.fg =require "stage/foreground"()
+	game.timer = require "stage/timer"()
+	game.weather = require "stage/weather"()
+	game.temperature= 10
 end
 
 function scene:enter()
@@ -19,17 +22,17 @@ function scene:draw()
 	love.graphics.push()
 	--love.graphics.scale(0.4, 0.4)
 	love.graphics.translate(-1800, -1300 )
-    self.bg:draw()
-    self.fg:draw()	
+    game.bg:draw()
+    game.fg:draw()	
     love.graphics.pop()
-    self.timer:draw()
+    game.timer:draw()
 end
 
 function scene:update(dt)
-    self.timer:update(dt)
+    game.timer:update(dt)
 
-    self.bg:update(dt)
-    self.fg:update(dt)
+    game.bg:update(dt)
+    game.fg:update(dt)
 end 
 
 function scene:leave()

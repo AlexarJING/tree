@@ -91,7 +91,7 @@ function moon:update()
 		self.visible=false
 	end
 	self.rot=Pi-math.getRot(self.x,self.y,stageSize/2,stageSize/2)
-	self.phase=self.parent.parent.timer.day
+	self.phase=game.timer.day
 	love.graphics.setCanvas(self.body)
 	self:drawMoon()
 	love.graphics.setCanvas()

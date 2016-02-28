@@ -13,7 +13,7 @@ function fg:init()
 	--table.insert(self.child,Lightning(self))
 	--table.insert(self.child,Snow(self))
 	table.insert(self.child,Ground(self))
-	table.insert(self.child,Tree())
+	--table.insert(self.child,Tree())
 end
 
 

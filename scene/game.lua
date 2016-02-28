@@ -1,7 +1,5 @@
 local scene = Gamestate.new()
 
-
-
 function scene:init()
 	game={}
 	game.bg =require "stage/background"()

@@ -5,7 +5,7 @@ local function CreateCircle(segments,alpha)
 	segments = segments or 10
 	alpha = alpha and 0 or 255
 	local vertices = {}
-	table.insert(vertices, {0, 0})
+	table.insert(vertices, {0, 0,100})
 	for i=0, segments do
 		local angle = (i / segments) * math.pi * 2
 		local x = math.cos(angle)
@@ -18,27 +18,30 @@ end
 function Cloud:init(bg,rx,ry,gray)
 	self.parent=bg
 	self.parts={}
-	self.height=1100
-	self.thickness=100
-	self.rx = rx or 100
-	self.ry = ry or 50
-	self.gray = gray or 255
+	self.height=1150
+	self.thickness=500
+	self.rx = rx or 1000
+	self.ry = ry or 150
+	self.gray = gray or 100
 	self.speed = speed or 0.2
 	self.body  = love.graphics.newCanvas(self.rx*4,self.ry*4)
 	self:create()
-	self.ball=CreateCircle()
+	self.ball=CreateCircle(20,true)
 end
 
 function Cloud:create()
 	for i=1,self.thickness do
+		local gray=(0.5-love.math.random())*200+self.gray
+		if gray>255 then gray=255 end
+		if gray<0 then gray=0 end
 		local part={
 			x=(0.5-love.math.random())*self.rx*2,
 			y=(0.5-love.math.random())*self.ry*2,
-			r=(1+love.math.random())*self.rx/5,
+			r=(1+love.math.random())*self.ry/3,
 			vx=(0.5-love.math.random())*self.speed,
 			vy=(0.5-love.math.random())*self.speed,
 			vc=(0.5-love.math.random())*self.speed,
-			gray=(0.5-love.math.random())*100+self.gray
+			gray=gray
 		}
 		table.insert(self.parts, part)
 	end
@@ -76,10 +79,7 @@ function Cloud:update(dt)
 		end
 		
 
-		local alpha = 40-math.abs(v.y)+self.rx*40/math.abs(v.x)
-		if alpha<0 then alpha=0 end;if alpha>40 then alpha=40 end
-		--love.graphics.setBlendMode("add")
-		love.graphics.setColor(self.gray,self.gray,self.gray,45)
+		love.graphics.setColor(self.gray,self.gray,self.gray,200)
 		love.graphics.draw(self.ball, 2*self.rx+v.x,2*self.ry+v.y+math.abs(v.x)/10,0,v.r,v.r)
 	end
 	love.graphics.setCanvas()
@@ -88,7 +88,27 @@ end
  
 function Cloud:draw()
 	love.graphics.setColor(255, 255,255)
-	love.graphics.draw(self.body, stageSize/2, -self.height+stageSize/2,self.rot,1,1,self.rx*2,self.ry*2)
+	for i,v in ipairs(self.parts) do	
+		v.x=v.x+v.vx
+		if v.x>self.rx then
+ 			v.vx=-math.abs(v.vx)
+ 			v.x=self.rx
+		elseif v.x<-self.rx then
+			v.vx=math.abs(v.vx)
+			v.x=-self.rx
+		end
+		v.y=v.y+v.vy
+		if v.y>self.ry then
+ 			v.vy=-math.abs(v.vy)
+ 			v.y=self.ry
+		elseif v.y<-self.ry then
+			v.vy=math.abs(v.vy)
+			v.y=-self.ry
+		end
+		
+		love.graphics.setColor(self.gray,self.gray,self.gray,100)
+		love.graphics.draw(self.ball, v.x+stageSize/2,stageSize/2-self.height+v.y+math.abs(v.x)/10,0,v.r,v.r)
+	end
 end
 
 

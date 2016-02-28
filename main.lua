@@ -16,7 +16,7 @@ Resolution={
 
 function love.load()
 	love.graphics.setFont(love.graphics.newFont("font/cn.ttf", 20))
-	love.graphics.setBackgroundColor(100,200,255)
+	love.graphics.setBackgroundColor(0,0,50)
 	state={}
 	state.game=require("scene/game")
 	Gamestate.registerEvents()
@@ -32,10 +32,7 @@ end
 
 
 function love.draw()
-	for i =0,5 do
-		love.graphics.setColor(255, 255, 255, 55*i)
-		love.graphics.circle("fill", 50+55*i, 100, 50)
-	end
+	
 end
 
 

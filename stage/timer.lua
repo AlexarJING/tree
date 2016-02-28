@@ -8,7 +8,7 @@ function timer:init()
 	self.hour=12
 	self.minut=0
 	self.hourTotal=0
-	self.multiply=10
+	self.multiply=50
 	self.debug=true
 	self.nextCheck=0
 end

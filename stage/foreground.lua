@@ -1,21 +1,22 @@
 local fg=Class("fg")
 local Ground= require "objects/ground"
-local Tree = require "tree/node"
+local Tree = require "tree/seed"
 local Cloud = require "objects/cloud"
 local Rain = require "objects/rain"
-local Snow= require "objects/snow"
+
 
 
 function fg:init()
-	self.child={}
-	table.insert(self.child,Cloud(self))
-	table.insert(self.child,Rain(self))
-	--table.insert(self.child,Lightning(self))
-	--table.insert(self.child,Snow(self))
-	table.insert(self.child,Ground(self))
-	--table.insert(self.child,Tree())
-end
 
+	self.child={}
+	self.rain=Rain(self)
+	--table.insert(self.child,self.rain)
+	self.cloud=Cloud(self)
+	--table.insert(self.child,self.cloud)
+	table.insert(self.child,Ground(self))
+	table.insert(self.child,Tree())
+
+end
 
 function fg:update()
 	for i,v in ipairs(self.child) do

@@ -1,6 +1,6 @@
 local moon=Class("moon")
 local stageSize=5000
-local moonPos=1050
+local moonPos=2000
 local function circle(segments,alpha)
 	segments = segments or 40
 	alpha = alpha and 0 or 255
@@ -91,7 +91,7 @@ function moon:update()
 		self.visible=false
 	end
 	self.rot=Pi-math.getRot(self.x,self.y,stageSize/2,stageSize/2)
-	self.phase=game.timer.day
+	self.phase=game.timer.day+game.timer.hour/24
 	love.graphics.setCanvas(self.body)
 	self:drawMoon()
 	love.graphics.setCanvas()

@@ -1,7 +1,8 @@
 local node=Class("node")
 local Leaf = require "tree/leaf"
+local Flower = require "tree/flower"
 local WidthSpeed=0.01
-local ApicalRate=1.7
+local ApicalRate=1.0
 function node:init(parent,rot)
 	self.parent=parent
 	self.children={}
@@ -17,75 +18,65 @@ function node:init(parent,rot)
 	self.lenthLimit=20
 
 
-	if self.parent then 
-		self.angle=self.parent.angle+self.rot-self.parent.angle/10
-		self.core=self.parent.core
-	else
-		self.angle=0
-		self.x=2500
-		self.y=2000
-		self.tx=self.x
-		self.ty=self.y
-		self.core=self
-		self.topY=self.y
-		--self.core.top=self
-	end
+	
+	self.angle=self.parent.angle+self.rot-self.parent.angle/10
+	self.core=self.parent.core
+	
 
 	self:getPosition()
-	if self.parent then
-		if self.ty<self.core.topY then 
-			self.core.topY=self.ty
-			self.lenthSpeed=self.core.lenthSpeed
-			if self.core.top then
-				self.core.top.lenthSpeed=(self.core.lenthSpeed*
-				(self.core.y-self.ty)/(self.core.y-self.core.topY)/ApicalRate)
-			end
-			self.core.top=self
-		else
-			self.lenthSpeed=(self.core.lenthSpeed*
-				(self.core.y-self.ty)/(self.core.y-self.core.topY)/ApicalRate)
-		end
+
+	self:apicalEffect()
 		
-	else
-		self.lenthSpeed = 0.2
-	end
-	
 end
 
-function node:getPosition()
-	if self.parent then
-		if not self.dead then
-			local micro=love.timer.getTime()-math.floor(love.timer.getTime())
-			self.angle=self.angle+math.sin(micro*2*Pi)/1000
-			local offX,offY=math.axisRot(0,-self.lenthLimit-self.level,self.angle)
-			self.tx=self.parent.x+offX
-			self.ty=self.parent.y+offY
-			local offX,offY=math.axisRot(0,-self.lenth,self.angle)
-			self.x=self.parent.x+offX
-			self.y=self.parent.y+offY
-			local offX,offY=math.axisRot(-self.width/2,0,self.angle)
-			self.lx=self.x+offX
-			self.ly=self.y+offY
-			self.lx2=self.parent.x+offX
-			self.ly2=self.parent.y+offY
-			local offX,offY=math.axisRot(self.width/2,0,self.angle)
-			self.rx=self.x+offX
-			self.ry=self.y+offY
-			self.rx2=self.parent.x+offX
-			self.ry2=self.parent.y+offY
-		else
-			self.y=self.y+self.y/500
-			self.ly=self.ly+self.ly/500
-			self.ry=self.ry+self.ry/500
-			self.ly2=self.ly2+self.ly2/500
-			self.ry2=self.ry2+self.ry2/500
+function node:apicalEffect()
+	if self.ty<self.core.topY then 
+		self.core.topY=self.ty
+		self.lenthSpeed=self.core.lenthSpeed
+		if self.core.top then
+			self.core.top.lenthSpeed=(self.core.lenthSpeed*
+			(self.core.y-self.ty)/(self.core.y-self.core.topY)/ApicalRate)
 		end
+		self.core.top=self
 	else
-		self.lx=self.x-self.width/2
-		self.ly=self.y
-		self.rx=self.x+self.width/2
-		self.ry=self.y
+		self.lenthSpeed=(self.core.lenthSpeed*
+			(self.core.y-self.ty)/(self.core.y-self.core.topY)/ApicalRate)
 	end
+end
+
+
+
+function node:getPosition()
+	
+	if not self.dead then
+		--local micro=love.timer.getTime()-math.floor(love.timer.getTime())
+		--self.angle=self.angle+math.sin(micro*2*Pi)/1000
+		local offX,offY=math.axisRot(0,-self.lenthLimit-self.level,self.angle)
+		self.tx=self.parent.x+offX
+		self.ty=self.parent.y+offY
+		local offX,offY=math.axisRot(0,-self.lenth,self.angle)
+		self.x=self.parent.x+offX
+		self.y=self.parent.y+offY
+		local offX,offY=math.axisRot(-self.width/2,0,self.angle)
+		self.lx=self.x+offX
+		self.ly=self.y+offY
+		self.lx2=self.parent.x+offX
+		self.ly2=self.parent.y+offY
+		local offX,offY=math.axisRot(self.width/2,0,self.angle)
+		self.rx=self.x+offX
+		self.ry=self.y+offY
+		self.rx2=self.parent.x+offX
+		self.ry2=self.parent.y+offY
+	else
+		self.y=self.y+self.y/500
+		self.ly=self.ly+self.ly/500
+		self.ry=self.ry+self.ry/500
+		self.ly2=self.ly2+self.ly2/500
+		self.ry2=self.ry2+self.ry2/500
+	end
+	
+		
+
 end
 
 function node:levelUp()
@@ -159,13 +150,25 @@ function node:addLeaf()
 	if self.leafGrow<0 then
 		self.leafGrow=self.leafStep
 		local rnd=love.math.random()
+		rnd=-1
+
 		if rnd>0.7 then
 			table.insert(self.leaf, Leaf(self,1))
 			table.insert(self.leaf, Leaf(self,-1))
 		elseif rnd>0.35 then
-			table.insert(self.leaf, Leaf(self,-1))
+			if self.core.level>1 then
+				table.insert(self.leaf, Flower(self,-1))
+			else
+				table.insert(self.leaf, Leaf(self,-1))
+			end
+		elseif rnd>0 then
+			if self.core.level>1 then
+				table.insert(self.leaf, Flower(self,1))
+			else
+				table.insert(self.leaf, Leaf(self,1))
+			end
 		else
-			table.insert(self.leaf, Leaf(self,1))
+			table.insert(self.leaf, Flower(self,math.sign(0.5-lm.random())))
 		end
 	end
 
@@ -216,23 +219,20 @@ end
 
 
 function node:draw()
-	if self.parent then
-		if self.dead then
-			love.graphics.setColor(50,50,50)
-		else
-			love.graphics.setColor(255,255,255)
-		end
-		love.graphics.polygon("fill",
-			self.lx2,self.ly2,
-			self.rx2,self.ry2,
-			self.rx,self.ry,
-			self.lx,self.ly
-			)
-		love.graphics.circle("fill", self.x,self.y,self.width/2)
+	
+	if self.dead then
+		love.graphics.setColor(50,50,50)
 	else
 		love.graphics.setColor(255,255,255)
-		love.graphics.circle("fill", self.x,self.y,self.width/2)
 	end
+	love.graphics.polygon("fill",
+		self.lx2,self.ly2,
+		self.rx2,self.ry2,
+		self.rx,self.ry,
+		self.lx,self.ly
+		)
+	love.graphics.circle("fill", self.x,self.y,self.width/2)
+	
 	for i,v in ipairs(self.leaf) do
 		v:draw()
 	end

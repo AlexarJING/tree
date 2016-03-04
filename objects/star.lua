@@ -6,6 +6,7 @@ function star:init(bg)
 	self.canvas = love.graphics.newCanvas(stageSize/2,stageSize/2)
 	love.graphics.setCanvas(self.canvas)
 	for i=1 , self.count do
+		love.graphics.setPointSize(lm.random(1,2))
 		love.graphics.setColor(255, 255, 255, lm.random()*100+155)
 		love.graphics.points(lm.random()*stageSize/2, lm.random()*stageSize/2)
 

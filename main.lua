@@ -1,17 +1,11 @@
+
 Class = require "libs/middleclass"
 require "libs/util"
 Tween = require "libs/tween"
-Node = require "tree/node"
-Leaf = require "tree/leaf"
+
+
 Gamestate = require "libs/gamestate"
-Resolution={
-	x=360,
-	y=600	
-}
-
-
-
-
+require "tree/seed"
 
 
 function love.load()

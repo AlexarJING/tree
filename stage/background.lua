@@ -6,13 +6,17 @@ local Star = require "objects/star"
 
 function bg:init(scene)
 	self.child={}
-	--table.insert(self.child,Star(self))
-	table.insert(self.child,Sky(self))
-	--table.insert(self.child,Sun(self))
-	--table.insert(self.child,Moon(self))
+	self.star=Star(self)
+	self.sky =Sky(self)
+	self.sun = Sun(self)
+	self.moon = Moon(self)
+	--table.insert(self.child,self.sky)
+	table.insert(self.child,self.star)
+	
+	--table.insert(self.child,self.sun)
+	--table.insert(self.child,self.moon)
 
-	self.brightness=0.5
-	self.colorful=0.15
+	
 	self.rot=0
 end
 

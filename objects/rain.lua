@@ -5,9 +5,8 @@ local stageSize=5000
 function rain:init(fg)
 	self.parent=fg
 	self.height=height or 1100
-	self.rad = rad or 1500
+	self.rad = rad or 3000
 	self.thickness = thickness or 10000
-	self.wind=  wind or 0
 	self.lightning = lightning or 0.1
 	self.cd= cd or 1
 	self.timer=0
@@ -15,9 +14,18 @@ function rain:init(fg)
 	self.lightnings={}
 end
 
-function rain:reset(cd,thunder)
-	if thunder then self.lightning= thunder end
-	if cd then self.cd =5/cd end
+function rain:reset(index)
+	if index>0.5 then
+		self.cd=1/(50^(index-0.5))
+		if index>0.7 then
+			self.lightning=(index-0.7)*2
+		else
+			self.lightning=0
+		end
+	else
+		self.cd=1/0
+		self.lightning=0
+	end
 end
 
 
@@ -27,16 +35,16 @@ function rain:createDrop()
 		return {
 			x=stageSize/2+(0.5-love.math.random())*self.rad,
 			y=stageSize/2-self.height,
-			vy=3,
-			vx=self.wind,
+			vy=10,
+			alpha=love.math.random(20,100),
 			type="rain"
 		}
 	else
 		return {
 			x=stageSize/2+(0.5-love.math.random())*self.rad,
 			y=stageSize/2-self.height,
-			vy=0.7,
-			vx=self.wind,
+			vy=1,
+			alpha=love.math.random(20,100),
 			offx=love.math.random()*Pi*2,
 			r = 2+love.math.random()*5,
 			type="snow"
@@ -48,7 +56,7 @@ end
 
 function rain:update()
 
-	if self.lightning and love.math.random()>1-self.lightning/10 then  
+	if self.lightning and game.temperature>0 and love.math.random()>1.000-self.lightning/10 then  
 		table.insert(self.lightnings, Lightning(self))
 	end
 	if #self.drops<self.thickness then
@@ -68,13 +76,13 @@ function rain:update()
 		if v.type=="rain" then
 			v.lx=v.x
 			v.ly=v.y
-			v.vy=v.vy+0.2
+			v.vy=v.vy
 			v.y=v.y +v.vy
-			v.x=v.x+v.vx
+			v.x=v.x+game.wind
 		else
 			v.y=v.y +v.vy
 			v.offx=v.offx+Pi/100
-			v.x=v.x+v.vx+math.sin(v.offx)
+			v.x=v.x+game.wind+math.sin(v.offx)
 		end
 		if v.y>stageSize/2 or math.getDistance(v.x,v.y,stageSize/2,stageSize/2)<500 then
 			table.remove(self.drops, i)
@@ -89,9 +97,10 @@ end
 
 
 function rain:draw()
-	love.graphics.setColor(200, 200, 200, 50)
-	love.graphics.setLineWidth(1)
+	
 	for i,v in ipairs(self.drops) do
+		love.graphics.setColor(255,255,255,v.alpha)
+		love.graphics.setLineWidth(love.math.random(1,2))
 		if v.type=="rain" then
 			love.graphics.line(v.lx, v.ly, v.x, v.y)
 		else

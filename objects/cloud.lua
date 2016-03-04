@@ -18,95 +18,105 @@ end
 function Cloud:init(bg,rx,ry,gray)
 	self.parent=bg
 	self.parts={}
-	self.height=1150
-	self.thickness=500
+	self.height=1200
+	self.thickness=400
 	self.rx = rx or 1000
 	self.ry = ry or 150
-	self.gray = gray or 100
-	self.speed = speed or 0.2
-	self.body  = love.graphics.newCanvas(self.rx*4,self.ry*4)
+	self.gray = gray or 250
+	self.speed = speed or 0.3
 	self:create()
 	self.ball=CreateCircle(20,true)
 end
 
-function Cloud:create()
-	for i=1,self.thickness do
-		local gray=(0.5-love.math.random())*200+self.gray
+function Cloud:insert()
+	local gray=(0.5-love.math.random())*200+self.gray
 		if gray>255 then gray=255 end
 		if gray<0 then gray=0 end
 		local part={
 			x=(0.5-love.math.random())*self.rx*2,
 			y=(0.5-love.math.random())*self.ry*2,
-			r=(1+love.math.random())*self.ry/3,
-			vx=(0.5-love.math.random())*self.speed,
-			vy=(0.5-love.math.random())*self.speed,
-			vc=(0.5-love.math.random())*self.speed,
-			gray=gray
+			r=(2+love.math.random())*self.ry/3,
+			vx=self:getRandomV(),
+			vy=self:getRandomV(),
+			gray=gray,
+			state=imm  --0 for standard 1 for increase -1 for decrearse
+		}
+	table.insert(self.parts, part)
+end
+
+function Cloud:remove()
+	for i,v in ipairs(self.parts) do
+		if v.state==0 then
+			v.state=-1
+		end
+	end
+end
+
+function Cloud:create()
+	for i=1,self.thickness do
+		local gray=(0.5-love.math.random())*50+self.gray
+		if gray>255 then gray=255 end
+		if gray<0 then gray=0 end
+		local part={
+			x=(0.5-love.math.random())*self.rx*2,
+			y=(0.5-love.math.random())*self.ry*2,
+			r=(2+love.math.random())*self.ry/3,
+			vx=self:getRandomV()*math.sign(0.5-love.math.random()),
+			vy=self:getRandomV()*math.sign(0.5-love.math.random()),
+			gray=gray,
+			alpha=1,
 		}
 		table.insert(self.parts, part)
 	end
-
 end
 
-function Cloud:reset()
+function Cloud:reset(index)
+	local alpha,gray
+	if index>0.5 then
+		alpha=1
+		gray=255-(index-0.5)*500
+	else
+		alpha=((index*3.3)^2)/10
+		gray=255
+	end
+	for i,v in ipairs(self.parts) do	
+		v.alpha=alpha
+		v.gray=v.gray+(gray-v.gray)/5
+	end
+end
 
-
+function Cloud:getRandomV()
+	local wind=love.math.random()*self.speed*(math.abs(game.wind)+1)*math.sign(game.wind+0.001)
+	return love.math.random()*self.speed*(math.abs(game.wind)+1)*math.sign(game.wind+0.001)
 end
 
 
 function Cloud:update(dt)
-	--self.rot=self.parent.rot
-	--self.x,self.y=math.axisRot(0,self.height,self.parent.rot+self.pos)
-	love.graphics.setCanvas(self.body)
-	
-	love.graphics.clear()
 	for i,v in ipairs(self.parts) do	
 		v.x=v.x+v.vx
 		if v.x>self.rx then
- 			v.vx=-math.abs(v.vx)
+ 			v.vx=-math.abs(self:getRandomV())
  			v.x=self.rx
 		elseif v.x<-self.rx then
-			v.vx=math.abs(v.vx)
+			v.vx=math.abs(self:getRandomV())
 			v.x=-self.rx
 		end
 		v.y=v.y+v.vy
 		if v.y>self.ry then
- 			v.vy=-math.abs(v.vy)
+ 			v.vy=-math.abs(self:getRandomV())
  			v.y=self.ry
 		elseif v.y<-self.ry then
-			v.vy=math.abs(v.vy)
+			v.vy=math.abs(self:getRandomV())
 			v.y=-self.ry
 		end
-		
-
-		love.graphics.setColor(self.gray,self.gray,self.gray,200)
-		love.graphics.draw(self.ball, 2*self.rx+v.x,2*self.ry+v.y+math.abs(v.x)/10,0,v.r,v.r)
 	end
-	love.graphics.setCanvas()
 end
 
  
 function Cloud:draw()
-	love.graphics.setColor(255, 255,255)
+
 	for i,v in ipairs(self.parts) do	
-		v.x=v.x+v.vx
-		if v.x>self.rx then
- 			v.vx=-math.abs(v.vx)
- 			v.x=self.rx
-		elseif v.x<-self.rx then
-			v.vx=math.abs(v.vx)
-			v.x=-self.rx
-		end
-		v.y=v.y+v.vy
-		if v.y>self.ry then
- 			v.vy=-math.abs(v.vy)
- 			v.y=self.ry
-		elseif v.y<-self.ry then
-			v.vy=math.abs(v.vy)
-			v.y=-self.ry
-		end
-		
-		love.graphics.setColor(self.gray,self.gray,self.gray,100)
+		love.graphics.setColor(v.gray*game.brightness,v.gray*game.brightness,v.gray*game.brightness,100*v.alpha)
 		love.graphics.draw(self.ball, v.x+stageSize/2,stageSize/2-self.height+v.y+math.abs(v.x)/10,0,v.r,v.r)
 	end
 end

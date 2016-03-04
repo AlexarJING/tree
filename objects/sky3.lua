@@ -33,7 +33,7 @@ function sky:colorCtrl()
 	self.color[3]=255-42*math.abs(12-hour) --0，255
 	
 	for i=1,3 do
-		self.color[i]=self.color[i]+(128-self.color[i])*(1-self.parent.colorful)
+		self.color[i]=self.color[i]+(128-self.color[i])*(1-game.colorful)
 	end
 
 	if hour>9 and hour<15 then
@@ -45,7 +45,7 @@ function sky:colorCtrl()
 	else
 		self.brightness= 0
 	end
-	self.color[4]=self.brightness*self.parent.brightness
+	self.color[4]=self.brightness*game.brightness
 end
 
 

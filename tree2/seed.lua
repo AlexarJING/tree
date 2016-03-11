@@ -1,4 +1,4 @@
-local node = require "tree/node"
+local node = require "tree2/node"
 local seed = Class("seed",node)
 
 function seed:init()

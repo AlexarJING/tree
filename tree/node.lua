@@ -2,7 +2,7 @@ local node=Class("node")
 local Leaf = require "tree/leaf"
 local Flower = require "tree/flower"
 local WidthSpeed=0.01
-local ApicalRate=1.0
+local ApicalRate=1.7
 function node:init(parent,rot)
 	self.parent=parent
 	self.children={}

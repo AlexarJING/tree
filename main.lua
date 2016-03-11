@@ -5,7 +5,7 @@ Tween = require "libs/tween"
 
 
 Gamestate = require "libs/gamestate"
-require "tree/seed"
+
 
 
 function love.load()

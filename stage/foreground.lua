@@ -1,6 +1,6 @@
 local fg=Class("fg")
 local Ground= require "objects/ground"
-local Tree = require "tree/seed"
+local Tree = require "tree2"
 local Cloud = require "objects/cloud"
 local Rain = require "objects/rain"
 
